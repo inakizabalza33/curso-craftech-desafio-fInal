@@ -1,0 +1,30 @@
+version: "3"
+services:
+
+  backend:
+    build:
+      context: ./test-app-backend
+      dockerfile: Dockerfile
+    env_file: ./test-app-backend/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./test-app-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:bullseye
+    container_name: postgres
+    env_file: ./test-app-backend/env.postgres.example
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database-data:/var/lib/postgresql/data
